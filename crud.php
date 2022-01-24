@@ -35,6 +35,17 @@
 
 ?>
 
+<!-- delete data -->
+<?php 
+    if (isset($_GET['delete'])) {
+       $stdid = $_GET['delete'];
+       $query = "DELETE FROM crud1 WHERE crud1_id={$stdid}";
+       $deletequery = mysqli_query($conn, $query);
+       if($deletequery){
+           echo "data remove successfully";
+       } 
+    }
+?>
 
 
 
@@ -105,22 +116,35 @@
                 <th scope="col">SL</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
-                <th scope="col">Action</th>
+                <th scope="col">ActionE</th>
+                <th scope="col">ActionD</th>
               </tr>
             </thead>
             <tbody>
               <?php 
                   $sql =  "SELECT * FROM `crud1`";
-                  $result = mysqli_query($conn, $sql);
-                  while($row = mysqli_fetch_assoc($result)){
-                    echo "
-                    <tr>
-                      <td>". $row['crud1_id']."</td>
-                      <td>". $row['crud1_name']."</td>
-                      <td>". $row['crud1_email']."</td>
-                    </tr>";
-                  }
+                  $readData = mysqli_query($conn, $sql);
+                  if($readData->num_rows > 0){
+                  while($rowData = mysqli_fetch_assoc($readData)){
+                    $crud1_id = $rowData['crud1_id'];
+                    $crud1_name = $rowData['crud1_name'];
+                    $crud1_email = $rowData['crud1_email'];
               ?>
+                <tr>
+                    <td><?php echo $crud1_id ?></td>
+                    <td><?php echo $crud1_name ?></td>
+                    <td><?php echo $crud1_email ?></td>
+                    <td>
+                        <a href="crud.php?update=<?php echo $crud1_id ?>" class="btn btn-info">Update</a>
+                    </td>
+                    <td>
+                        <a href="crud.php?delete=<?php echo $crud1_id ?>" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+
+              <?php }} else{
+                  echo "No Data to show";
+              }?>
             </tbody>
           </table>
         </div>
@@ -128,7 +152,7 @@
         <div class="col-4">
           <h4 class="text-center">Data Add</h4>
           <div class="form" style="background-color: rgba(218, 209, 209, 0.877); padding: 10px; border-radius: 5px;">
-            <form action="/crud-with-raw-php/index.php" method="post">
+            <form action="/crud-with-raw-php/crud.php" method="post">
               <div class="mb-3">
                 <label for="Name" class="form-label">Name</label>
                 <input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp">
@@ -141,6 +165,18 @@
             </form>
           </div>
         </div>
+        <!-- form design 2 -->
+        <div class="col-4">
+          <h4 class="text-center">Data Add</h4>
+          <div class="form" style="background-color: rgba(218, 209, 209, 0.877); padding: 10px; border-radius: 5px;">
+            <form action="/crud-with-raw-php/crud.php" method="post">
+              <?php 
+
+              ?>
+            </form>
+          </div>
+        </div>
+
       </div>
   </div>
 
