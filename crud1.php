@@ -1,10 +1,6 @@
 <!-- php coding -->
 <?php 
   //Connect to the database
-  //INSERT INTO `crud1` (`crud1_id`, `crud1_name`, `crud1_email`, `crud1_tstamp`) VALUES (NULL, 'Robi', 'robi1@gmail.com', CURRENT_TIMESTAMP);
-  $insert = false;
-  $update = false;
-
   $servername = "localhost";
   $username = "root";
   $password = "";
@@ -22,15 +18,18 @@
   // }
   
   // data create into database
-  if ($_SERVER['REQUEST_METHOD'] == "POST") {
+  // if ($_SERVER['REQUEST_METHOD'] == "POST") {
+  if (isset($_POST['update'])) {
     $crud1_name = $_POST['name'];
     $crud1_email = $_POST['email'];
-    $sql = "INSERT INTO `crud1` (`crud1_name`, `crud1_email`) VALUES ('$crud1_name','$crud1_email')";
-    $result = mysqli_query($conn, $sql);
-    if($result){
-      $insert = true; 
+    if(!empty($crud1_name) && !empty($crud1_email)){
+      $sql = "INSERT INTO `crud1` (`crud1_name`, `crud1_email`) VALUES ('$crud1_name','$crud1_email')";
+      $result = mysqli_query($conn, $sql);
+      if($result){
+        echo "Your Data submited";
+      }
     }else{
-      echo "Record was not inserted successfully";
+      echo "Field should not be empty";
     }
   }
 
@@ -94,28 +93,6 @@
       </div>
     </nav>
 
-    <!-- alert -->
-    <?php 
-      if($insert){
-          echo "
-            <div class='alert alert-warning alert-dismissible fade show' role='alert'>
-              <strong>successfully !</strong> You record inserted successfully.
-              <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-            </div>
-          ";
-      }
-    ?>
-    <?php 
-      if($update){
-          echo "
-            <div class='alert alert-warning alert-dismissible fade show' role='alert'>
-              <strong>successfully !</strong> You Data Update successfully.
-              <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-            </div>
-          ";
-      }
-    ?>
-
     <!-- Create Table or form  -->
     <div class="container">
       <div class="row mt-5">
@@ -172,7 +149,7 @@
                 <label for="Email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email">
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary" value="Create" name = "update">Submit</button>
             </form>
           </div>
         </div>
@@ -181,52 +158,43 @@
           <h4 class="text-center">Data Add</h4>
           <div class="form" style="background-color: rgba(218, 209, 209, 0.877); padding: 10px; border-radius: 5px;">
             <form action="" method="post">
-              <?php 
-                if(isset($_GET['update'])){
-                  $stdid = $_GET['update'];
-                  $query = "SELECT * FROM crud1 WHERE crud1_id = {$stdid}";
-                  $getdata = mysqli_query($conn, $query); 
-                  while($rx = mysqli_fetch_assoc($getdata)){
-                    $crud1_id = $rx['crud1_id'];
-                    $crud1_name = $rx['crud1_name'];
-                    $crud1_email = $rx['crud1_email'];
-                  
-              ?>
-
-              <div class="mb-3">
-                <label for="Name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" value = "<?php echo $crud1_name;  ?>">
-              </div>
-              <div class="mb-3">
-                <label for="Email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value = "<?php echo $crud1_email;  ?>" >
-              </div>
-              <button type="submit" class="btn btn-primary" value="update" name = "update_d">Submit</button>
+                <?php 
+                  if(isset($_GET['update'])){
+                    $stdid = $_GET['update'];
+                    $query = "SELECT * FROM crud1 WHERE crud1_id = {$stdid}";
+                    $getdata = mysqli_query($conn, $query); 
+                    while($rx = mysqli_fetch_assoc($getdata)){
+                      $crud1_id = $rx['crud1_id'];
+                      $crud1_name = $rx['crud1_name'];
+                      $crud1_email = $rx['crud1_email'];
+                ?>
+                <div class="mb-3">
+                  <label for="Name" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="crud1_name" name="crud1_name" value = "<?php echo $crud1_name;  ?>">
+                </div>
+                <div class="mb-3">
+                  <label for="Email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="crud1_email" name="crud1_email" value = "<?php echo $crud1_email;  ?>" >
+                </div>
+                <button type="submit" class="btn btn-primary" value="Update" name = "update_btn">Submit</button>
               <?php }} ?>
-
+                    
               <?php 
-                if(isset($_POST['update_d'])){
-                  $crud1_name = $_POST['name'];
-                  $crud1_email = $_POST['email'];
-                  $query = "UPDATE crud1 SET crud1_name = '$crud1_name', crud1_email = '$crud1_email' WHERE crud1_id = {$stdid}";
+                if(isset($_POST['update_btn'])){
+                  $crud1_name = $_POST['crud1_name'];
+                  $crud1_email = $_POST['crud1_email'];
+                  $query = "UPDATE crud1 SET crud1_name = '$crud1_name', crud1_email = '$crud1_email' WHERE crud1_id = $stdid";
                   $updatequery = mysqli_query($conn, $query);
                   if($updatequery){
-                    $update = true; 
+                    echo "Data Updated"; 
                   }
                 }
               ?>
             </form>
           </div>
         </div>
-
       </div>
   </div>
-
-    <script>
-      $(document).ready( function () {
-        $('#myTable').DataTable();
-      } );
-    </script>
 
 </body>
 </html>

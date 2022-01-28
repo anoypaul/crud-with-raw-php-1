@@ -1,7 +1,6 @@
 <!-- php coding -->
 <?php 
   //Connect to the database
-  //INSERT INTO `crud1` (`crud1_id`, `crud1_name`, `crud1_email`, `crud1_tstamp`) VALUES (NULL, 'Robi', 'robi1@gmail.com', CURRENT_TIMESTAMP);
   $insert = false;
 
   $servername = "localhost";
